@@ -28,6 +28,7 @@ import generadoresPseudoAleatorios.Poisson;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Toggle;
 import generadoresPseudoAleatorios.*;
+import javafx.scene.chart.XYChart;
 
 /**
  *
@@ -175,6 +176,70 @@ public class FXMLController implements Initializable{
                 txfSerieGenerada.getItems().add(serie[i]);
             }
         }
+        
+        int intervalos = Integer.parseInt(txtCantIntervalos.getText());
+        for (int i = 3; i < 11; i++) {
+            if (Integer.parseInt(txtCantIntervalos.getText()) > (10*i + 1)) {
+                intervalos = 10*i + 1;
+            }
+        }
+        
+        
+        
+        //Parametros para definir escala de eje Y
+        double unit = pruebaChi.getFrecuenciaEsp(1) / (double) 10;
+        if (unit < 1)
+        {
+            unit = 1;
+        }
+        double upperLimit = pruebaChi.getFrecuenciaEsp(1) + unit + 5;
+
+        // base bar chart
+        chrtFrecuenciaC.setLegendVisible(false);
+        chrtFrecuenciaC.setAnimated(false);
+        chrtFrecuenciaC.setCategoryGap(10);
+
+        // overlay line chart
+        lnchrEsperadaC.setLegendVisible(false);
+        lnchrEsperadaC.setAnimated(false);
+        lnchrEsperadaC.setCreateSymbols(true);
+        lnchrEsperadaC.setAlternativeRowFillVisible(false);
+        lnchrEsperadaC.setAlternativeColumnFillVisible(false);
+        lnchrEsperadaC.setHorizontalGridLinesVisible(false);
+        lnchrEsperadaC.setVerticalGridLinesVisible(false);
+        lnchrEsperadaC.getXAxis().setVisible(false);
+        lnchrEsperadaC.getYAxis().setVisible(false);
+        //Carga stylesheet a linechart
+        lnchrEsperadaC.getStylesheets().addAll(getClass().getResource("/styles/chart.css").toExternalForm());
+
+        //Sincronizar rango de eje Y de ambas graficas 
+        yFrecBc.setAutoRanging(false);
+        yFrecBc.setLowerBound(0);
+        yFrecBc.setUpperBound(upperLimit);
+        yFrecBc.setTickUnit(unit);
+
+        yFrecLn.setAutoRanging(false);
+        yFrecLn.setLowerBound(0);
+        yFrecLn.setUpperBound(upperLimit);
+        yFrecLn.setTickUnit(unit);
+
+        //Cargar datos de distribucion de frecuencia en graficos
+        XYChart.Series set1 = new XYChart.Series<>();
+        for (int i = 0; i < pruebaChi.getK(); i++)
+        {
+            double aux = (double) i;
+            set1.getData().add(new XYChart.Data(pruebaChi.getIntervalo(aux), pruebaChi.getFrecuenciaObs(i)));
+        }
+        chrtFrecuenciaC.getData().addAll(set1);
+
+        XYChart.Series set2 = new XYChart.Series<>();
+        for (int i = 0; i < pruebaChi.getK(); i++)
+        {
+            double aux = (double) i;
+            set2.getData().add(new XYChart.Data(pruebaChi.getIntervalo(aux), pruebaChi.getFrecuenciaEsp(i)));
+        }
+        lnchrEsperadaC.getData().addAll(set2);
+        
  
     }
     
