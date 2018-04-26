@@ -3,7 +3,7 @@
  * a traves de Metodo Congruencial Lineal Mixto o Congruencial Multiplicativo
  * -La diferencia depende del valor de C.
  */
-package service.nrosAleatorios;
+package generadoresPseudoAleatorios;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

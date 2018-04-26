@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package distribuciones;
+package generadoresPseudoAleatorios;
 
-import service.nrosAleatorios.Congruencial;
 
 /**
  *
  * @author Bruno
  */
-public class Poisson {
+public class GeneradorPoisson {
     
     private int lambda;
     private Congruencial gnr;
@@ -19,7 +18,7 @@ public class Poisson {
     private int x;
     private double a;
 
-    public Poisson(int lambda) {
+    public GeneradorPoisson(int lambda) {
         this.lambda = lambda;
         
         
@@ -28,7 +27,7 @@ public class Poisson {
         this.gnr = new Congruencial();
     }
     
-    public Poisson(int lambda, double seed) {
+    public GeneradorPoisson(int lambda, double seed) {
         this.lambda = lambda;
         
         this.p = 1;
