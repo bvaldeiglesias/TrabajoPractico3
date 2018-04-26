@@ -24,7 +24,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import pruebasAleatoridad.ChiCuadrado;
 import generadoresPseudoAleatorios.Congruencial;
-import generadoresPseudoAleatorios.Poisson;
+import generadoresPseudoAleatorios.GeneradorPoisson;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Toggle;
 import generadoresPseudoAleatorios.*;
@@ -156,7 +156,7 @@ public class FXMLController implements Initializable{
             int lambda = Integer.parseInt(txtLambda.getText());
             
             serie = new double[cantNros];
-            Poisson gnr = new Poisson(lambda);
+            GeneradorPoisson gnr = new GeneradorPoisson(lambda);
             
             for (int i = 0; i < cantNros; i++) {
                 serie[i] = gnr.rnd();
