@@ -3,7 +3,7 @@ Resolucion Trabajo Practico n3 de la materia Simulacion del año 2018
 
 **Reglas de commit, push y codigo en general:**
 - `git pull` Antes de empezar a programar.
-- Notacion camello para todo
+- Notacion camello para todo, paquetes con minuscula y clases con mayuscula.
 - Describir que cambios hicimos en `git commit -m [Mensaje]`.
 - Avisar al resto del equipo antes de `git push`. **NO PUSHEAR** codigo roto, si el proyecto no corre, no subir, si tiene bugs es otra cosa.
 - No pushear codigo comentado (no confundirse con javadoc)
