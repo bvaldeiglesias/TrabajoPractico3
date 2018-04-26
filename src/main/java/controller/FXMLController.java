@@ -23,7 +23,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import pruebasAleatoridad.ChiCuadrado;
-import nrosAleatorios.Congruencial;
+import generadoresPseudoAleatorios.Congruencial;
 
 /**
  *
