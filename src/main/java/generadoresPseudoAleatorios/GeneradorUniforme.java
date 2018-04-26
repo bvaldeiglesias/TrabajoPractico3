@@ -1,6 +1,8 @@
 package generadoresPseudoAleatorios;
 
 
+
+
 public class GeneradorUniforme
 {
 
