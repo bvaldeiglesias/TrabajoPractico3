@@ -4,12 +4,12 @@ package generadoresPseudoAleatorios;
 public class GeneradorBoxMuller
 {
 
-    private float phi = (float) Math.PI;
-    private float desv_est;
-    private float media;
+    private double phi = (double) Math.PI;
+    private double desv_est;
+    private double media;
     private Congruencial gnr;
-    private float n1;
-    private float n2;
+    private double n1;
+    private double n2;
 
     public GeneradorBoxMuller()
     {
@@ -18,7 +18,7 @@ public class GeneradorBoxMuller
         gnr = new Congruencial();
     }
 
-    public GeneradorBoxMuller(float desv, float med)
+    public GeneradorBoxMuller(double desv, double med)
     {
         this.desv_est = desv;
         this.media = med;
@@ -27,20 +27,20 @@ public class GeneradorBoxMuller
 
     public void generarBoxMuller()
     {
-        float rnd1 = (float) gnr.RND();
-        float rnd2 = (float) gnr.RND();
-        float adentro_raiz = (float) ((float) -2*Math.log(rnd1));
-        float argumento = (float) 2*phi*rnd2;
-        n1 = (float) (desv_est*Math.sqrt(adentro_raiz)*Math.cos(argumento))+media;
-        n2 = (float) (desv_est*Math.sqrt(adentro_raiz)*Math.sin(argumento))+media;
+        double rnd1 = (double) gnr.RND();
+        double rnd2 = (double) gnr.RND();
+        double adentro_raiz = (double) ((double) -2*Math.log(rnd1));
+        double argumento = (double) 2*phi*rnd2;
+        n1 = (double) (desv_est*Math.sqrt(adentro_raiz)*Math.cos(argumento))+media;
+        n2 = (double) (desv_est*Math.sqrt(adentro_raiz)*Math.sin(argumento))+media;
     }
     
-    public float getN1()
+    public double getN1()
     {
         return n1;
     }
     
-    public float getN2()
+    public double getN2()
     {
         return n2;
     }

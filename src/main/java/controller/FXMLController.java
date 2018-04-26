@@ -24,6 +24,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import pruebasAleatoridad.ChiCuadrado;
 import generadoresPseudoAleatorios.Congruencial;
+import generadoresPseudoAleatorios.Poisson;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.Toggle;
+import generadoresPseudoAleatorios.*;
 
 /**
  *
@@ -106,6 +110,72 @@ public class FXMLController implements Initializable{
     
     @FXML
     private void handleButtonProbar(ActionEvent event) {
+        txtCantNros.setDisable(true);
+        txtCantIntervalos.setDisable(true);
+        txtAoMedia.setDisable(true);
+        txtBoDesviacion.setDisable(true);
+        txtLambda.setDisable(true);
+        
+        
+        
+        if (rdbUniforme.isSelected()) {
+            int cantNros = Integer.parseInt(txtCantNros.getText());
+            int a = Integer.parseInt(txtAoMedia.getText());
+            int b = Integer.parseInt(txtBoDesviacion.getText());
+            
+            serie = new double[cantNros];
+            GeneradorUniforme gnr = new GeneradorUniforme(a, b);
+            
+            for (int i = 0; i < cantNros; i++) {
+                serie[i] = gnr.rnd();
+                txfSerieGenerada.getItems().add(serie[i]);
+            }
+        }
+        if (rdbNormal.isSelected()) {
+            int cantNros = Integer.parseInt(txtCantNros.getText());
+            double media = Double.parseDouble(txtAoMedia.getText());
+            double desviacion = Double.parseDouble(txtBoDesviacion.getText());
+
+            serie = new double[cantNros];
+
+            GeneradorBoxMuller gnr = new GeneradorBoxMuller(desviacion, media);
+
+            for (int i = 0; i < cantNros; i++) {
+                gnr.generarBoxMuller();
+                if (i % 2 == 0) {
+                    serie[i] = gnr.getN1();
+                } else {
+                    serie[i] = gnr.getN2();
+                }
+                txfSerieGenerada.getItems().add(serie[i]);
+            }
+        }
+        if (rdbPoisson.isSelected()) {
+            int cantNros = Integer.parseInt(txtCantNros.getText());
+            int lambda = Integer.parseInt(txtLambda.getText());
+            
+            serie = new double[cantNros];
+            Poisson gnr = new Poisson(lambda);
+            
+            for (int i = 0; i < cantNros; i++) {
+                serie[i] = gnr.rnd();
+                txfSerieGenerada.getItems().add(serie[i]);
+            }
+            
+        }
+        if (rdbExponencial.isSelected()) {
+            int cantNros = Integer.parseInt(txtCantNros.getText());
+            int lambda = Integer.parseInt(txtLambda.getText());
+            
+            serie = new double[cantNros];
+            GeneradorExponencial gnr = new GeneradorExponencial(lambda);
+            
+            for (int i = 0; i < cantNros; i++) {
+                serie[i] = gnr.rnd();
+                txfSerieGenerada.getItems().add(serie[i]);
+            }
+        }
+ 
     }
     
     @FXML
@@ -145,4 +215,74 @@ public class FXMLController implements Initializable{
         txtLambda.setDisable(true);
     }
   
+     public static class Row
+    {
+
+        private final SimpleStringProperty intervalo; 
+        private final SimpleStringProperty frecuencia_obtenida;
+        private final SimpleStringProperty frecuencia_esperada;
+        private final SimpleStringProperty col3;
+        private final SimpleStringProperty col4;
+
+        private Row(String intervalo, String frecuencia_obtenida, String frecuencia_esperada, String col3, String col4)
+        {
+            this.intervalo = new SimpleStringProperty(intervalo);
+            this.frecuencia_esperada = new SimpleStringProperty(frecuencia_esperada);
+            this.frecuencia_obtenida = new SimpleStringProperty(frecuencia_obtenida);
+            this.col3 =new SimpleStringProperty(col3);
+            this.col4 =new SimpleStringProperty(col4);
+        }
+
+        public void setDesde(String asd)
+        {
+            intervalo.set(asd);
+        }
+
+        public void setFrec_esp(String asd)
+        {
+            frecuencia_esperada.set(asd);
+        }
+
+        public void setFrec_obt(String asd)
+        {
+            frecuencia_obtenida.set(asd);
+        }
+
+        public void setCol3(String asd)
+        {
+            col3.set(asd);
+        }
+        
+        public void setCol4(String asd)
+        {
+            col4.set(asd);
+        }
+
+        public String getIntervalo()
+        {
+            return intervalo.get();
+        }
+
+        public String getFrecuencia_obtenida()
+        {
+            return frecuencia_obtenida.get();
+        }
+
+        public String getFrecuencia_esperada()
+        {
+            return frecuencia_esperada.get();
+        }
+        
+        public String getCol3()
+        {
+            return col3.get();
+        }
+        public String getCol4()
+        {
+            return col4.get();
+        }
+
+    }
+
+    
 }

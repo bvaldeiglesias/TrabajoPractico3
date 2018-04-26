@@ -6,8 +6,8 @@ package generadoresPseudoAleatorios;
 public class GeneradorUniforme
 {
 
-    private float a;
-    private float b;
+    private int a;
+    private int b;
     private Congruencial gnr;
 
     public GeneradorUniforme()
@@ -17,16 +17,16 @@ public class GeneradorUniforme
         gnr = new Congruencial();
     }
 
-    public GeneradorUniforme(float a, float b)
+    public GeneradorUniforme(int a, int b)
     {
         this.a = a;
         this.b = b;
         gnr = new Congruencial();
     }
 
-    public float generarUniforme()
+    public double rnd()
     {
-        float x = (float) ((float) a + gnr.RND() * (b - a));
+        double x = (double) ((double) a + gnr.RND() * (b - a));
         return x;
     }
 

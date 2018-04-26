@@ -3,7 +3,7 @@ package generadoresPseudoAleatorios;
 public class GeneradorExponencial
 {
 
-    private float lambda;
+    private double lambda;
     private Congruencial gnr;
 
     public GeneradorExponencial()
@@ -11,13 +11,13 @@ public class GeneradorExponencial
         lambda = 1 / 3;
     }
 
-    public GeneradorExponencial(float lambda)
+    public GeneradorExponencial(double lambda)
     {
         this.lambda = lambda;
         gnr = new Congruencial();
     }
 
-    public double generarExponencial()
+    public double rnd()
     {
         
         double x = (-1 / lambda) * Math.log(1 - gnr.RND());
