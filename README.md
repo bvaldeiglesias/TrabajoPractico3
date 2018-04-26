@@ -3,9 +3,7 @@ Resolucion Trabajo Practico n3 de la materia Simulacion del año 2018
 
 **Reglas de commit, push y codigo en general:**
 - `git pull` Antes de empezar a programar.
-- Marcar en Trello las tareas en las que estemos trabajando, liberar tareas si no las pudimos resolver.
-- En Trello, agreagar comentarios de lo que trabajamos en la tarjeta (tarea).
-- Notacion camello para todo (menos lo relacionado a SQL, ahi usar guion bajo).
+- Notacion camello para todo
 - Describir que cambios hicimos en `git commit -m [Mensaje]`.
 - Avisar al resto del equipo antes de `git push`. **NO PUSHEAR** codigo roto, si el proyecto no corre, no subir, si tiene bugs es otra cosa.
 - No pushear codigo comentado (no confundirse con javadoc)
