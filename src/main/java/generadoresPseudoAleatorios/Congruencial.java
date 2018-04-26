@@ -33,11 +33,11 @@ public class Congruencial {
         this.precision=4;
     }
 
-    public Congruencial(double c) {
-        this.c = c;     //Debe ser 0 para ser "Congruencial Multiplicativo"
+    public Congruencial(double seed) {
+        this.c = 56822;     
         this.a = 71561;
         this.m = 341157;
-        this.seed = 31767;
+        this.seed = seed;
         this.precision=4;
         this.first = false;
     }
