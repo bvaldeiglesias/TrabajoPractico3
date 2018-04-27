@@ -14,9 +14,10 @@ public class Normal
     public Normal(double v[], int intervalo)
     {
         this.intervalo = intervalo;
+        this.v = v;
         this.desv_est = desviacion_estandar();
         this.media_aritmetica = media_aritmetica();
-        this.v = v;
+        
     }
 
     public int size()
@@ -24,15 +25,15 @@ public class Normal
         return v.length;
     }
 
-    public float desviacion_estandar()
+    public double desviacion_estandar()
     {
-        float acu = 0;
+        double acu = 0;
         for (int i = 0; i < v.length; i++)
         {
-            acu += (float) Math.pow(v[i] - media_aritmetica, 2);
+            acu += (double) Math.pow(v[i] - media_aritmetica, 2);
         }
-        float cociente = (float) 1 / (v.length - 1);
-        float desvi_est = (float) Math.sqrt(acu * cociente);
+        double cociente = (double) 1 / (v.length - 1);
+        double desvi_est = (double) Math.sqrt(acu * cociente);
         return desvi_est;
     }
 
@@ -41,7 +42,7 @@ public class Normal
         marca_clase(intervalo);
         vector_probabilidades = new double[marca_clase.length];
         double elevacion;
-        float desv_estandar = (float) desv_est;
+        double desv_estandar = (float) desv_est;
         double cociente = 1 / (desv_estandar * Math.sqrt(2 * Math.PI));
         double resultado;
         for (int i = 0; i < vector_probabilidades.length; i++)

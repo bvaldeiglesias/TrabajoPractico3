@@ -1,5 +1,6 @@
 package controller;
 
+import distribuciones.Normal;
 import distribuciones.Uniforme;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -144,10 +145,10 @@ public class FXMLController implements Initializable{
                 txfSerieGenerada.getItems().add(serie[i]);
             }
             
-            double sum = 0;
-            for (double d : serie) {
-                sum+=d;
-            }
+//            double sum = 0;
+//            for (double d : serie) {
+//                sum+=d;
+//            }
             
 //            double mediaAritmetica = sum/serie.length;
 //            
@@ -168,7 +169,6 @@ public class FXMLController implements Initializable{
             double desviacion = Double.parseDouble(txtBoDesviacion.getText());
 
             serie = new double[cantNros];
-
             GeneradorBoxMuller gnr = new GeneradorBoxMuller(desviacion, media);
 
             for (int i = 0; i < cantNros; i++) {
@@ -179,6 +179,15 @@ public class FXMLController implements Initializable{
                     serie[i] = gnr.getN2();
                 }
                 txfSerieGenerada.getItems().add(serie[i]);
+            }
+            
+            Normal calculador = new Normal(serie, intervalos);
+            calculador.marca_clase(intervalos);
+            calculador.prob_ocurrencia_teclado();
+            double[] aux = calculador.frec_esperada_x_intervalo();
+            serieFe = new double[intervalos];
+            for (int i = 0; i < intervalos; i++) {
+                serieFe[i]=aux[i];
             }
         }
         if (rdbPoisson.isSelected()) {
