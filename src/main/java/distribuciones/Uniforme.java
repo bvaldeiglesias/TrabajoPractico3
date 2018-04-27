@@ -5,10 +5,15 @@ public class Uniforme
 
     private double media_aritmetica;
     private double v[];
+    private double fe;
 
     //Constructor x default que se usa cuando el valor de "a" y "b" no fueron ingresados, utilizando solo la frecuencia esperada directa
     public Uniforme()
     {
+    }
+    
+    public Uniforme(int a, int b, int intervalo){
+        fe = (double)(b-a)/(double) intervalo;
     }
 
     //Constructor utilizado cuando el valor de "a" y "b" no fueron ingresados, calculando las funciones solo con el vector y la media
@@ -32,6 +37,11 @@ public class Uniforme
         return 2 * (1 / (b() - a()));
     }
 
+    public double getFe() {
+        return fe;
+    }
+
+    
     //Método que devuelve la varianza del vector de números generados.
     public double varianza()
     {

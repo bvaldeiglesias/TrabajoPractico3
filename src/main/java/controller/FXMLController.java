@@ -1,5 +1,6 @@
 package controller;
 
+import distribuciones.Uniforme;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -28,6 +29,10 @@ import generadoresPseudoAleatorios.GeneradorPoisson;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Toggle;
 import generadoresPseudoAleatorios.*;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 
 /**
@@ -87,6 +92,7 @@ public class FXMLController implements Initializable{
     private ChiCuadrado pruebaChi;
     private NumberAxis yFrecLn_B;
     private Congruencial rndGenerator;
+    private double[] serieFe;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -116,8 +122,14 @@ public class FXMLController implements Initializable{
         txtAoMedia.setDisable(true);
         txtBoDesviacion.setDisable(true);
         txtLambda.setDisable(true);
+        btnReiniciar.setDisable(false);
         
-        
+        int intervalos = Integer.parseInt(txtCantIntervalos.getText());
+        for (int i = 3; i < 11; i++) {
+            if (Integer.parseInt(txtCantIntervalos.getText()) > (10*i + 1)) {
+                intervalos = 10*i + 1;
+            }
+        }
         
         if (rdbUniforme.isSelected()) {
             int cantNros = Integer.parseInt(txtCantNros.getText());
@@ -131,6 +143,24 @@ public class FXMLController implements Initializable{
                 serie[i] = gnr.rnd();
                 txfSerieGenerada.getItems().add(serie[i]);
             }
+            
+            double sum = 0;
+            for (double d : serie) {
+                sum+=d;
+            }
+            
+//            double mediaAritmetica = sum/serie.length;
+//            
+//            Uniforme calculador = new Uniforme(mediaAritmetica, serie);
+//            calculador.quickSort();
+            serieFe = new double[intervalos];
+            for (int i = 0; i < intervalos; i++) {
+                //serieFe[i]=calculador.fe_densidad();
+                serieFe[i]=cantNros/intervalos;
+            }
+            
+   
+            
         }
         if (rdbNormal.isSelected()) {
             int cantNros = Integer.parseInt(txtCantNros.getText());
@@ -177,12 +207,19 @@ public class FXMLController implements Initializable{
             }
         }
         
-        int intervalos = Integer.parseInt(txtCantIntervalos.getText());
-        for (int i = 3; i < 11; i++) {
-            if (Integer.parseInt(txtCantIntervalos.getText()) > (10*i + 1)) {
-                intervalos = 10*i + 1;
-            }
+        pruebaChi = new ChiCuadrado(serie, intervalos , 4);
+        for (int i = 0; i < intervalos; i++) {
+            pruebaChi.setFe(serieFe[i], i);
         }
+        if (pruebaChi.hipotesis())
+        {
+            lblAceptaPrueba.setText("Se acepta hipotesis. " + pruebaChi.getR() + " < " + pruebaChi.getValueTablaChi() + " (Valor de tabla)");
+        } else
+        {
+            lblAceptaPrueba.setText("Se rechaza hipotesis. " + pruebaChi.getR() + " > " + pruebaChi.getValueTablaChi() + " (Valor de tabla)");
+        }
+        
+        
         
         
         
@@ -227,24 +264,55 @@ public class FXMLController implements Initializable{
         XYChart.Series set1 = new XYChart.Series<>();
         for (int i = 0; i < pruebaChi.getK(); i++)
         {
-            double aux = (double) i;
-            set1.getData().add(new XYChart.Data(pruebaChi.getIntervalo(aux), pruebaChi.getFrecuenciaObs(i)));
+            set1.getData().add(new XYChart.Data(pruebaChi.getIntervalo(i+1), pruebaChi.getFrecuenciaObs(i)));
         }
         chrtFrecuenciaC.getData().addAll(set1);
 
         XYChart.Series set2 = new XYChart.Series<>();
         for (int i = 0; i < pruebaChi.getK(); i++)
         {
-            double aux = (double) i;
-            set2.getData().add(new XYChart.Data(pruebaChi.getIntervalo(aux), pruebaChi.getFrecuenciaEsp(i)));
+            set2.getData().add(new XYChart.Data(pruebaChi.getIntervalo(i+1), pruebaChi.getFrecuenciaEsp(i)));
         }
         lnchrEsperadaC.getData().addAll(set2);
         
+        //Relleno de la tabla
+        final ObservableList<Row> data = FXCollections.observableArrayList();
+        for (int i = 0; i < pruebaChi.getK(); i++) {
+            String Frecuencia_observada = String.valueOf(pruebaChi.getFrecuenciaObs(i));
+            String Frecuencia_esperada = String.valueOf(pruebaChi.getFrecuenciaEsp(i));
+            String valueCol3 = pruebaChi.getPosTabla(3, i);
+            String valueCol4 = pruebaChi.getPosTabla(4, i);
+            data.add(new Row(pruebaChi.getIntervalo(i), Frecuencia_observada, Frecuencia_esperada, valueCol3, valueCol4));
+
+        }
+        tblTabla.getItems().addAll(data);
+        lblSumatoriaChiCuadrado.setText(String.valueOf(pruebaChi.getR()));
  
     }
     
     @FXML
     private void handleButtonReiniciar(ActionEvent event) {
+        btnProbar.setDisable(false);
+        btnReiniciar.setDisable(true);
+        txtCantIntervalos.setDisable(false);
+        txtCantNros.setDisable(false);
+
+        txtCantNros.setText("");
+
+        txtCantIntervalos.setText("");
+        lblAceptaPrueba.setText("");
+        lblSumatoriaChiCuadrado.setText("");
+        
+        pruebaChi = null;
+        rndGenerator = null;
+        //rnd = null;
+        
+
+        chrtFrecuenciaC.getData().clear();
+        lnchrEsperadaC.getData().clear();
+        
+        txfSerieGenerada.getItems().clear();
+        tblTabla.getItems().clear();
     }
 
 

@@ -23,9 +23,6 @@ public class ChiCuadrado {
     public ChiCuadrado(double[] serie, int k, int op) {
         this.serie = serie;
         this.k = k;
-        if (serie.length/k < 5) { //Para Distribucion Uniforme...
-            this.k=k/2;
-        }
         this.v = this.k - 1 - 0;
         this.tabla = new double[5][this.k];
         for (int i = 0; i < this.k; i++) {
@@ -33,9 +30,6 @@ public class ChiCuadrado {
         }
         for (int i = 0; i < this.k; i++) {
             tabla[1][i] = 0;
-        }
-        for (int i = 0; i < this.k; i++) {
-            tabla[2][i] = serie.length / this.k; //Para Distribucion Uniforme...
         }
         switch(op){
             case 1:
@@ -95,12 +89,13 @@ public class ChiCuadrado {
     }
     
     public void distribucion(){
+        quickSort();
         for (int i = 0; i < serie.length; i++) {
             for (int j = 0; j < k; j++) {
-                double auxiliar = 1.00;
-                double li = 0 + (auxiliar/k + precision) * (tabla[0][j] - 1);
-                double ls = (auxiliar/k) * tabla[0][j];
-                if (li< serie[i] && serie[i] <ls) {
+                double auxiliar =  serie[serie.length-1] - serie[0];
+                double li = serie[0] + ((auxiliar/k) + precision) * (tabla[0][j] - 1);
+                double ls = li +(auxiliar/k);
+                if (li<= serie[i] && serie[i] <=ls) {
                     tabla[1][j]++;
                     break;
                 }
@@ -159,6 +154,10 @@ public class ChiCuadrado {
     public void setTabla(double[][] tabla) {
         this.tabla = tabla;
     }
+    
+    public void setFe(double fe,int intervalo){
+        this.tabla[2][intervalo]=fe;
+    }
 
     public String getPosTabla (int col,int row){
         return String.valueOf(tabla[col][row]);
@@ -184,25 +183,26 @@ public class ChiCuadrado {
         this.tablaChiCuadrado95 = tablaChiCuadrado95;
     }
     
-    public String getIntervalo(double intervalo){
-        double auxiliar = 1.00;
-        double limi = (double)0 + (auxiliar/k) * (intervalo) + precision;
+    public String getIntervalo(int intervalo){
+        double auxiliar = serie[serie.length - 1] - serie[0];
+        double li = serie[0] + ((auxiliar / k) + precision) * (intervalo - 1);
+        double ls = li + (auxiliar / k);
         if (intervalo == 0) {
-            limi = 0;
+            li = 0;
         }
-        double lims = (auxiliar/(double)k) * (intervalo + auxiliar);
+
         
-        String li = new BigDecimal(limi)
+        String lin = new BigDecimal(li)
                 .setScale(4, RoundingMode.DOWN)
                 .stripTrailingZeros()
                 .toString();
         
-        String ls = new BigDecimal(lims)
+        String lsu = new BigDecimal(ls)
                 .setScale(4, RoundingMode.DOWN)
                 .stripTrailingZeros()
                 .toString();
         
-        return (li + " - " + ls);
+        return (lin + " - " + lsu);
     }
     
     public double getFrecuenciaObs(int intervalo){
@@ -217,5 +217,44 @@ public class ChiCuadrado {
     public double getR() {
         return r;
     }
+    
+    public void quickSort()
+    {
+        quick(0, serie.length - 1);
+    }
 
+    private void quick(int izq, int der)
+    {
+        int i = izq, j = der;
+        double y;
+        double x = serie[(izq + der) / 2];
+        do
+        {
+            while (serie[i] < x && i < der)
+            {
+                i++;
+            }
+            while (x < serie[j] && j > izq)
+            {
+                j--;
+            }
+            if (i <= j)
+            {
+                y = serie[i];
+                serie[i] = serie[j];
+                serie[j] = y;
+                i++;
+                j--;
+            }
+        } while (i <= j);
+        if (izq < j)
+        {
+            quick(izq, j);
+        }
+        if (i < der)
+        {
+            quick(i, der);
+        }
+    }
+    
 }
