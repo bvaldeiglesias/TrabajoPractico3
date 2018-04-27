@@ -1,6 +1,7 @@
 package controller;
 
 import distribuciones.Normal;
+import distribuciones.Poisson;
 import distribuciones.Uniforme;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -200,6 +201,13 @@ public class FXMLController implements Initializable{
             for (int i = 0; i < cantNros; i++) {
                 serie[i] = gnr.rnd();
                 txfSerieGenerada.getItems().add(serie[i]);
+            }
+            
+            Poisson calculador = new Poisson(serie, lambda, intervalos);
+            double[] aux = calculador.frecuencia_esperada_intervalo();
+            serieFe = new double[intervalos];
+            for (int i = 0; i < intervalos; i++) {
+                serieFe[i]=aux[i];
             }
             
         }

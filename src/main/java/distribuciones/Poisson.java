@@ -14,6 +14,7 @@ public class Poisson
     {
         this.lambda = lambda;
         this.intervalo = intervalo;
+        frecuencia_esperada = new double[intervalo];
         this.v = v;
     }
 
