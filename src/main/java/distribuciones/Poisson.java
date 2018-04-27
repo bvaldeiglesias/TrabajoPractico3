@@ -50,7 +50,10 @@ public class Poisson
         int ultimo_valor = (int) temp[temp.length - 1];
         int recorrido = ultimo_valor - primer_valor;
         int cant_x_int = (int) Math.floor(recorrido / intervalo);
-        int anterior = primer_valor - cant_x_int;
+        if (cant_x_int < 1) {
+            cant_x_int=1;
+        }
+        int anterior = primer_valor;
         int posterior;
         for (int i = 0; i < intervalo; i++)
         {

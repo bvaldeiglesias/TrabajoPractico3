@@ -98,7 +98,15 @@ public class ChiCuadrado {
                     rango = 1;
                 }
                 double li = serie[0] + (rango + precision) * (tabla[0][j] - 1);
-                double ls = li +rango;
+                if (poisson) {
+                    li = (int) Math.floor(li);
+                    
+                }
+                double ls = li + rango;
+                if (poisson) {
+                    
+                    ls = (int) Math.floor(ls);
+                }
                 if (li<= serie[i] && serie[i] <=ls) {
                     tabla[1][j]++;
                     break;
@@ -160,6 +168,9 @@ public class ChiCuadrado {
     }
     
     public void setFe(double fe,int intervalo){
+        if(fe == 0){
+            fe=1;
+        }
         this.tabla[2][intervalo]=fe;
     }
 
@@ -189,26 +200,41 @@ public class ChiCuadrado {
     
     public String getIntervalo(int intervalo, boolean poisson){
         double auxiliar = serie[serie.length - 1] - serie[0];
-        double rango = (auxiliar/k);
-                if (poisson && rango <1) {
-                    rango = 1;
-                }
-        double li = serie[0] + (rango + precision) * (intervalo - 1);
-        double ls = li + rango;
-        if (intervalo == 0) {
-            li = 0;
+        double rango = (auxiliar / k);
+        if (poisson && rango < 1) {
+            rango = 1;
         }
+        double li = serie[0] + (rango + precision) * (intervalo - 1);
+        if (poisson) {
+            li = (int) Math.floor(li);
 
-        
+        }
+        double ls = li + rango;
+        if (poisson) {
+
+            if (intervalo == 0) {
+                li = 0;
+            }
+
+        }
         String lin = new BigDecimal(li)
                 .setScale(4, RoundingMode.DOWN)
                 .stripTrailingZeros()
                 .toString();
+        String lsu;
         
-        String lsu = new BigDecimal(ls)
+        if (li == 10) {
+            lsu="10";
+        }
+        if (ls == 10) {
+             lsu = "10";
+        } else {
+            lsu = new BigDecimal(ls)
                 .setScale(4, RoundingMode.DOWN)
                 .stripTrailingZeros()
                 .toString();
+        }
+        
         
         return (lin + " - " + lsu);
     }
@@ -268,6 +294,11 @@ public class ChiCuadrado {
     public double getFrecuenciaEspMayor(int i) {
         double aux = 1;
         for (double d : tabla[2]) {
+            if (d > aux) {
+                aux=d;
+            }
+        }
+        for (double d : tabla[1]) {
             if (d > aux) {
                 aux=d;
             }

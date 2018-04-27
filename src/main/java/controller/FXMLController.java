@@ -310,7 +310,7 @@ public class FXMLController implements Initializable{
             String Frecuencia_esperada = String.valueOf(pruebaChi.getFrecuenciaEsp(i));
             String valueCol3 = pruebaChi.getPosTabla(3, i);
             String valueCol4 = pruebaChi.getPosTabla(4, i);
-            data.add(new Row(pruebaChi.getIntervalo(i, poisson), Frecuencia_observada, Frecuencia_esperada, valueCol3, valueCol4));
+            data.add(new Row(pruebaChi.getIntervalo(i+1, poisson), Frecuencia_observada, Frecuencia_esperada, valueCol3, valueCol4));
 
         }
         tblTabla.getItems().addAll(data);
