@@ -125,6 +125,7 @@ public class FXMLController implements Initializable{
         txtBoDesviacion.setDisable(true);
         txtLambda.setDisable(true);
         btnReiniciar.setDisable(false);
+        btnProbar.setDisable(true);
         
         int intervalos = Integer.parseInt(txtCantIntervalos.getText());
         for (int i = 3; i < 11; i++) {
@@ -313,6 +314,7 @@ public class FXMLController implements Initializable{
         btnReiniciar.setDisable(true);
         txtCantIntervalos.setDisable(false);
         txtCantNros.setDisable(false);
+        btnProbar.setDisable(false);
 
         txtCantNros.setText("");
 
