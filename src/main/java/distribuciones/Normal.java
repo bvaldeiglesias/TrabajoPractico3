@@ -5,22 +5,17 @@ public class Normal
     private double v[];
     private double vector_probabilidades[];
     private double vector_frecuencias_esperadas[];
-    private float marca_clase[];
+    private double marca_clase[];
     private double media_aritmetica;
     private double desv_est;
     private int intervalo;
+    double temp[];
 
-    public Normal(double v[], double media_aritmetica)
-    {
-        this.media_aritmetica = media_aritmetica;
-        this.v = v;
-    }
-
-    public Normal(double v[], double media_aritmetica, double desv_est, int intervalo)
+    public Normal(double v[], int intervalo)
     {
         this.intervalo = intervalo;
-        this.desv_est = desv_est;
-        this.media_aritmetica = media_aritmetica;
+        this.desv_est = desviacion_estandar();
+        this.media_aritmetica = media_aritmetica();
         this.v = v;
     }
 
@@ -41,35 +36,6 @@ public class Normal
         return desvi_est;
     }
 
-    public double[] prob_ocurrencia()
-    {
-        marca_clase_default();
-        vector_probabilidades = new double[marca_clase.length];
-        double elevacion;
-        float desv_estandar = desviacion_estandar();
-        double cociente = 1 / (desv_estandar * Math.sqrt(2 * Math.PI));
-        double resultado;
-        for (int i = 0; i < vector_probabilidades.length; i++)
-        {
-            elevacion = Math.exp(-0.5 * (Math.pow((marca_clase[i] - media_aritmetica) / desv_estandar, 2)));
-            resultado = elevacion * cociente;
-            vector_probabilidades[i] = resultado;
-        }
-        return vector_probabilidades;
-    }
-
-    public double[] frec_esperada_x_intervalo()
-    {
-        vector_frecuencias_esperadas = new double[marca_clase.length];
-        double resultado;
-        for (int i = 0; i < marca_clase.length; i++)
-        {
-            resultado = vector_probabilidades[i] * v.length;
-            vector_frecuencias_esperadas[i] = resultado;
-        }
-        return vector_frecuencias_esperadas;
-    }
-
     public double[] prob_ocurrencia_teclado()
     {
         marca_clase(intervalo);
@@ -87,7 +53,8 @@ public class Normal
         return vector_probabilidades;
     }
 
-    public double[] frec_esperada_x_intervalo_teclado()
+    //ESTE VECTOR ES EL QUE TE DEVUELVE LAS FRECUENCIAS ESPERADAS POR INTERVALO
+    public double[] frec_esperada_x_intervalo()
     {
         vector_frecuencias_esperadas = new double[marca_clase.length];
         double resultado;
@@ -101,33 +68,74 @@ public class Normal
 
     public void marca_clase(int intervalo)
     {
-        marca_clase = new float[intervalo];
-        double anterior = 0;
+        temp = v;
+        quickSort();
+        double primer_valor = temp[0];
+        double ultimo_valor = temp[temp.length-1];
+        double recorrido = ultimo_valor - primer_valor;
+        double cant_x_int = recorrido/intervalo;
+        marca_clase = new double[intervalo];
+        double anterior = primer_valor;
         double posterior;
         float marca;
         for (int i = 0; i < marca_clase.length; i++)
         {
-            posterior = anterior + 1;
+            posterior = anterior + cant_x_int;
             marca = (float) ((anterior + posterior) / 2);
             marca_clase[i] = marca;
             anterior = posterior;
         }
+    }
+    
+    public void quickSort()
+    {
+        quick(0, temp.length - 1);
     }
 
-    public void marca_clase_default()
+    private void quick(int izq, int der)
     {
-        marca_clase = new float[10];
-        double anterior = 0;
-        double posterior;
-        float marca;
-        for (int i = 0; i < marca_clase.length; i++)
+        int i = izq, j = der;
+        double y;
+        double x = temp[(izq + der) / 2];
+        do
         {
-            posterior = anterior + 1;
-            marca = (float) ((anterior + posterior) / 2);
-            marca_clase[i] = marca;
-            anterior = posterior;
+            while (temp[i] < x && i < der)
+            {
+                i++;
+            }
+            while (x < temp[j] && j > izq)
+            {
+                j--;
+            }
+            if (i <= j)
+            {
+                y = temp[i];
+                temp[i] = temp[j];
+                temp[j] = y;
+                i++;
+                j--;
+            }
+        } while (i <= j);
+        if (izq < j)
+        {
+            quick(izq, j);
+        }
+        if (i < der)
+        {
+            quick(i, der);
         }
     }
+    
+    public double media_aritmetica()
+    {
+        double acu = 0;
+        for (int i = 0; i < v.length; i++)
+        {
+            acu += v[i];
+        }
+        return (acu/v.length);
+    }
+
 
 }
 
