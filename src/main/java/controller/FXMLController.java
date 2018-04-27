@@ -185,7 +185,7 @@ public class FXMLController implements Initializable{
             
             Normal calculador = new Normal(serie, intervalos);
             calculador.marca_clase(intervalos);
-            calculador.prob_ocurrencia_teclado();
+            calculador.fmc();
             double[] aux = calculador.frec_esperada_x_intervalo();
             serieFe = new double[intervalos];
             for (int i = 0; i < intervalos; i++) {
