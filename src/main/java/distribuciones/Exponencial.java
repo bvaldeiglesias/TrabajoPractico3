@@ -43,7 +43,7 @@ public class Exponencial {
         double resultado;
         for (int i = 0; i < vector_probabilidades.length; i++)
         {
-            resultado = acumulacion(izq) - acumulacion(der);
+            resultado = acumulacion(der) - acumulacion(izq);
             vector_probabilidades[i] = resultado;
             izq=der;
             der = der + incremento;
@@ -69,11 +69,11 @@ public class Exponencial {
         marca_clase = new double[intervalo];
         double anterior = primer_valor;
         double posterior;
-        float marca;
+        double marca;
         for (int i = 0; i < marca_clase.length; i++)
         {
             posterior = anterior + cant_x_int;
-            marca = (float) ((anterior + posterior) / 2);
+            marca = (double) ((anterior + posterior) / 2);
             marca_clase[i] = marca;
             anterior = posterior;
         }

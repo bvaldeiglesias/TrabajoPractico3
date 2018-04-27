@@ -88,13 +88,17 @@ public class ChiCuadrado {
         
     }
     
-    public void distribucion(){
+    public void distribucion(boolean poisson){
         quickSort();
         for (int i = 0; i < serie.length; i++) {
             for (int j = 0; j < k; j++) {
                 double auxiliar =  serie[serie.length-1] - serie[0];
-                double li = serie[0] + ((auxiliar/k) + precision) * (tabla[0][j] - 1);
-                double ls = li +(auxiliar/k);
+                double rango = (auxiliar/k);
+                if (poisson && rango <1) {
+                    rango = 1;
+                }
+                double li = serie[0] + (rango + precision) * (tabla[0][j] - 1);
+                double ls = li +rango;
                 if (li<= serie[i] && serie[i] <=ls) {
                     tabla[1][j]++;
                     break;
@@ -117,8 +121,8 @@ public class ChiCuadrado {
         return r;
     }
 
-    public boolean hipotesis() {
-        distribucion();
+    public boolean hipotesis(boolean poisson) {
+        distribucion(poisson);
         return chiCalculada() <= tablaChiCuadrado95[v - 1];
 
     }
@@ -183,10 +187,14 @@ public class ChiCuadrado {
         this.tablaChiCuadrado95 = tablaChiCuadrado95;
     }
     
-    public String getIntervalo(int intervalo){
+    public String getIntervalo(int intervalo, boolean poisson){
         double auxiliar = serie[serie.length - 1] - serie[0];
-        double li = serie[0] + ((auxiliar / k) + precision) * (intervalo - 1);
-        double ls = li + (auxiliar / k);
+        double rango = (auxiliar/k);
+                if (poisson && rango <1) {
+                    rango = 1;
+                }
+        double li = serie[0] + (rango + precision) * (intervalo - 1);
+        double ls = li + rango;
         if (intervalo == 0) {
             li = 0;
         }
@@ -255,6 +263,16 @@ public class ChiCuadrado {
         {
             quick(i, der);
         }
+    }
+
+    public double getFrecuenciaEspMayor(int i) {
+        double aux = 1;
+        for (double d : tabla[2]) {
+            if (d > aux) {
+                aux=d;
+            }
+        }
+        return aux;
     }
     
 }

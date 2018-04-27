@@ -1,5 +1,6 @@
 package controller;
 
+import distribuciones.Exponencial;
 import distribuciones.Normal;
 import distribuciones.Poisson;
 import distribuciones.Uniforme;
@@ -133,7 +134,7 @@ public class FXMLController implements Initializable{
                 intervalos = 10*i + 1;
             }
         }
-        
+        boolean poisson = false;
         if (rdbUniforme.isSelected()) {
             int cantNros = Integer.parseInt(txtCantNros.getText());
             int a = Integer.parseInt(txtAoMedia.getText());
@@ -183,7 +184,7 @@ public class FXMLController implements Initializable{
                 txfSerieGenerada.getItems().add(serie[i]);
             }
             
-            Normal calculador = new Normal(serie, intervalos);
+            Normal calculador = new Normal(serie, intervalos, desviacion, media);
             calculador.marca_clase(intervalos);
             calculador.fmc();
             double[] aux = calculador.frec_esperada_x_intervalo();
@@ -195,6 +196,7 @@ public class FXMLController implements Initializable{
         if (rdbPoisson.isSelected()) {
             int cantNros = Integer.parseInt(txtCantNros.getText());
             int lambda = Integer.parseInt(txtLambda.getText());
+            poisson = true;
             
             serie = new double[cantNros];
             GeneradorPoisson gnr = new GeneradorPoisson(lambda);
@@ -223,13 +225,21 @@ public class FXMLController implements Initializable{
                 serie[i] = gnr.rnd();
                 txfSerieGenerada.getItems().add(serie[i]);
             }
+            
+            Exponencial calculador = new Exponencial(lambda, serie, intervalos);
+            calculador.prob_ocurrencia_teclado();
+            double[] aux = calculador.frec_esperada_x_intervalo();
+            serieFe = new double[intervalos];
+            for (int i = 0; i < intervalos; i++) {
+                serieFe[i]=aux[i];
+            }
         }
         
         pruebaChi = new ChiCuadrado(serie, intervalos , 4);
         for (int i = 0; i < intervalos; i++) {
             pruebaChi.setFe(serieFe[i], i);
         }
-        if (pruebaChi.hipotesis())
+        if (pruebaChi.hipotesis(poisson))
         {
             lblAceptaPrueba.setText("Se acepta hipotesis. " + pruebaChi.getR() + " < " + pruebaChi.getValueTablaChi() + " (Valor de tabla)");
         } else
@@ -242,12 +252,12 @@ public class FXMLController implements Initializable{
         
         
         //Parametros para definir escala de eje Y
-        double unit = pruebaChi.getFrecuenciaEsp(1) / (double) 10;
+        double unit = pruebaChi.getFrecuenciaEspMayor(1) / (double) 10;
         if (unit < 1)
         {
             unit = 1;
         }
-        double upperLimit = pruebaChi.getFrecuenciaEsp(1) + unit + 5;
+        double upperLimit = pruebaChi.getFrecuenciaEspMayor(1) + unit + 5;
 
         // base bar chart
         chrtFrecuenciaC.setLegendVisible(false);
@@ -282,14 +292,14 @@ public class FXMLController implements Initializable{
         XYChart.Series set1 = new XYChart.Series<>();
         for (int i = 0; i < pruebaChi.getK(); i++)
         {
-            set1.getData().add(new XYChart.Data(pruebaChi.getIntervalo(i+1), pruebaChi.getFrecuenciaObs(i)));
+            set1.getData().add(new XYChart.Data(pruebaChi.getIntervalo(i+1, poisson), pruebaChi.getFrecuenciaObs(i)));
         }
         chrtFrecuenciaC.getData().addAll(set1);
 
         XYChart.Series set2 = new XYChart.Series<>();
         for (int i = 0; i < pruebaChi.getK(); i++)
         {
-            set2.getData().add(new XYChart.Data(pruebaChi.getIntervalo(i+1), pruebaChi.getFrecuenciaEsp(i)));
+            set2.getData().add(new XYChart.Data(pruebaChi.getIntervalo(i+1, poisson), pruebaChi.getFrecuenciaEsp(i)));
         }
         lnchrEsperadaC.getData().addAll(set2);
         
@@ -300,7 +310,7 @@ public class FXMLController implements Initializable{
             String Frecuencia_esperada = String.valueOf(pruebaChi.getFrecuenciaEsp(i));
             String valueCol3 = pruebaChi.getPosTabla(3, i);
             String valueCol4 = pruebaChi.getPosTabla(4, i);
-            data.add(new Row(pruebaChi.getIntervalo(i), Frecuencia_observada, Frecuencia_esperada, valueCol3, valueCol4));
+            data.add(new Row(pruebaChi.getIntervalo(i, poisson), Frecuencia_observada, Frecuencia_esperada, valueCol3, valueCol4));
 
         }
         tblTabla.getItems().addAll(data);

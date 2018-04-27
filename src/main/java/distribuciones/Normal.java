@@ -20,13 +20,13 @@ public class Normal
     }
 
 //CONSTRUCTOR QUE FUNCIONA
-//    public Normal(double v[], int intervalo, double desv, double media)
-//    {
-//        this.intervalo = intervalo;
-//        this.v = v;
-//        this.desv_est = desv;
-//        this.media_aritmetica = media;
-//    }
+    public Normal(double v[], int intervalo, double desv, double media)
+    {
+        this.intervalo = intervalo;
+        this.v = v;
+        this.desv_est = desv;
+        this.media_aritmetica = media;
+    }
 
     public int size()
     {
